@@ -3,19 +3,16 @@ import './VolumeMonitor.css';
 
 const VolumeMonitor = () => {
     const [isLoud, setIsLoud] = useState(false);
-    const [threshold, setThreshold] = useState(25); // Default threshold is 60 dB
+    const [threshold, setThreshold] = useState(25); // Default threshold is 25 dB
     const [currentVolume, setCurrentVolume] = useState(0); // Display current volume
     const [displayedVolume, setDisplayedVolume] = useState(0); // Delayed display volume
     const audioContextRef = useRef(null);
     const analyserRef = useRef(null);
     const microphoneRef = useRef(null);
     const dataArrayRef = useRef(null);
-    const alarmSoundRef = useRef(null);
+    const alarmTimeoutRef = useRef(null);
 
     useEffect(() => {
-        // Setup alarm sound
-        alarmSoundRef.current = new Audio('https://www.soundjay.com/button/beep-07.wav');
-        
         // Initialize audio context and getUserMedia
         async function initAudio() {
             audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
@@ -53,13 +50,18 @@ const VolumeMonitor = () => {
         };
 
         const playAlarm = () => {
-            if (alarmSoundRef.current) {
-                alarmSoundRef.current.play();
-                setTimeout(() => {
-                    alarmSoundRef.current.pause();
-                    alarmSoundRef.current.currentTime = 0;
-                }, 2000);
-            }
+            // Create a beeping sound programmatically
+            const beepAudioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = beepAudioContext.createOscillator();
+            oscillator.type = 'square';
+            oscillator.frequency.setValueAtTime(440, beepAudioContext.currentTime); // Frequency 440 Hz (A4)
+            oscillator.connect(beepAudioContext.destination);
+            oscillator.start();
+            oscillator.stop(beepAudioContext.currentTime + 0.5);
+
+            // Make alarm visible for 5 seconds
+            if (alarmTimeoutRef.current) clearTimeout(alarmTimeoutRef.current);
+            alarmTimeoutRef.current = setTimeout(() => setIsLoud(false), 5000);
         };
 
         // Initialize audio on component mount
@@ -69,6 +71,9 @@ const VolumeMonitor = () => {
         return () => {
             if (audioContextRef.current) {
                 audioContextRef.current.close();
+            }
+            if (alarmTimeoutRef.current) {
+                clearTimeout(alarmTimeoutRef.current);
             }
         };
     }, [isLoud, threshold]);
