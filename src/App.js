@@ -41,6 +41,7 @@ const VolumeMonitor = () => {
             // Glättung der Lautstärkeanzeige zur besseren Lesbarkeit
             setDisplayedVolume((prev) => (prev * 0.8 + decibels * 0.2).toFixed(2));
 
+            // Grenzwertüberprüfung nur bei Überschreitung und wenn Alarm nicht bereits aktiv
             if (decibels > threshold && !alarmActive) {
                 triggerAlarm();
             }
@@ -53,9 +54,12 @@ const VolumeMonitor = () => {
             setIsLoud(true);
             playAlarmSound();
 
-            // Setze die Anzeige auf "isLoud" für 5 Sekunden
+            // Setze die Anzeige auf "isLoud" für 5 Sekunden und deaktiviere dann
             if (alarmTimeoutRef.current) clearTimeout(alarmTimeoutRef.current);
-            alarmTimeoutRef.current = setTimeout(() => setIsLoud(false), 5000);
+            alarmTimeoutRef.current = setTimeout(() => {
+                setIsLoud(false);
+                setAlarmActive(false);
+            }, 5000);
         };
 
         // Piepton programmatisch generieren
