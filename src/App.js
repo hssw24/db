@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './VolumeMonitor.css'; // Import the CSS file
+import './VolumeMonitor.css';
 
 const VolumeMonitor = () => {
     const [isLoud, setIsLoud] = useState(false);
     const [threshold, setThreshold] = useState(25); // Default threshold is 60 dB
     const [currentVolume, setCurrentVolume] = useState(0); // Display current volume
+    const [displayedVolume, setDisplayedVolume] = useState(0); // Delayed display volume
     const audioContextRef = useRef(null);
     const analyserRef = useRef(null);
     const microphoneRef = useRef(null);
@@ -13,7 +14,7 @@ const VolumeMonitor = () => {
 
     useEffect(() => {
         // Setup alarm sound
-        alarmSoundRef.current = new Audio('data:audio/wav;base64,UklGRjQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YfQAAAA=');
+        alarmSoundRef.current = new Audio('https://www.soundjay.com/button/beep-07.wav');
         
         // Initialize audio context and getUserMedia
         async function initAudio() {
@@ -38,7 +39,7 @@ const VolumeMonitor = () => {
 
             // Convert to decibels (approximation)
             const decibels = 20 * Math.log10(avgVolume);
-            setCurrentVolume(decibels.toFixed(2)); // Display the current decibel value
+            setCurrentVolume(decibels.toFixed(2)); // Update internal volume state
 
             if (decibels > threshold && !isLoud) {
                 setIsLoud(true);
@@ -61,6 +62,7 @@ const VolumeMonitor = () => {
             }
         };
 
+        // Initialize audio on component mount
         initAudio();
 
         // Cleanup function to stop audio when component unmounts
@@ -71,6 +73,14 @@ const VolumeMonitor = () => {
         };
     }, [isLoud, threshold]);
 
+    // Update displayed volume with a delay for readability
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            setDisplayedVolume(currentVolume);
+        }, 500);
+        return () => clearTimeout(timeout);
+    }, [currentVolume]);
+
     const handleThresholdChange = (event) => {
         setThreshold(Number(event.target.value));
     };
@@ -78,8 +88,14 @@ const VolumeMonitor = () => {
     return (
         <div className={`volume-monitor ${isLoud ? 'alert' : ''}`}>
             <h1>Volume Monitor</h1>
-            <p>Aktuelle Lautstärke: {currentVolume} dB</p>
+            <p>Aktuelle Lautstärke: {displayedVolume} dB</p>
             <p>{isLoud ? "Lautstärke überschritten!" : "Lautstärke im normalen Bereich"}</p>
+
+            {isLoud && (
+                <div className="alarm-text">
+                    Alarm
+                </div>
+            )}
 
             <h3>Wählen Sie den Grenzwert:</h3>
             {[20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70].map((value) => (

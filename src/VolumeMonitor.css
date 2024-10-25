@@ -13,3 +13,13 @@
     0%, 100% { background-color: white; }
     50% { background-color: red; }
 }
+
+.alarm-text {
+    font-size: 72pt;
+    color: black;
+    background-color: red;
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+}
