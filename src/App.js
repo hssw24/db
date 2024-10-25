@@ -3,9 +3,10 @@ import './VolumeMonitor.css';
 
 const VolumeMonitor = () => {
     const [isLoud, setIsLoud] = useState(false);
-    const [threshold, setThreshold] = useState(25); // Default threshold is 25 dB
-    const [currentVolume, setCurrentVolume] = useState(0); // Display current volume
-    const [displayedVolume, setDisplayedVolume] = useState(0); // Delayed display volume
+    const [threshold, setThreshold] = useState(25); // Standardgrenzwert auf 25 dB
+    const [currentVolume, setCurrentVolume] = useState(0); // Gemessene Lautstärke
+    const [displayedVolume, setDisplayedVolume] = useState(0); // Glatte Anzeige-Lautstärke
+    const [alarmActive, setAlarmActive] = useState(false);
     const audioContextRef = useRef(null);
     const analyserRef = useRef(null);
     const microphoneRef = useRef(null);
@@ -13,7 +14,6 @@ const VolumeMonitor = () => {
     const alarmTimeoutRef = useRef(null);
 
     useEffect(() => {
-        // Initialize audio context and getUserMedia
         async function initAudio() {
             audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -34,40 +34,43 @@ const VolumeMonitor = () => {
             analyserRef.current.getByteFrequencyData(dataArrayRef.current);
             const avgVolume = dataArrayRef.current.reduce((a, b) => a + b) / dataArrayRef.current.length;
 
-            // Convert to decibels (approximation)
-            const decibels = 20 * Math.log10(avgVolume);
-            setCurrentVolume(decibels.toFixed(2)); // Update internal volume state
+            // Umrechnung in Dezibel (logarithmisch, vereinfacht)
+            const decibels = 20 * Math.log10(avgVolume + 1); // +1 um log10(0) zu vermeiden
+            setCurrentVolume(decibels.toFixed(2));
 
-            if (decibels > threshold && !isLoud) {
-                setIsLoud(true);
-                playAlarm();
-            } else if (decibels <= threshold && isLoud) {
-                setIsLoud(false);
+            // Glättung der Lautstärkeanzeige zur besseren Lesbarkeit
+            setDisplayedVolume((prev) => (prev * 0.8 + decibels * 0.2).toFixed(2));
+
+            if (decibels > threshold && !alarmActive) {
+                triggerAlarm();
             }
 
-            // Call monitorVolume recursively for continuous checking
             requestAnimationFrame(monitorVolume);
         };
 
-        const playAlarm = () => {
-            // Create a beeping sound programmatically
-            const beepAudioContext = new (window.AudioContext || window.webkitAudioContext)();
-            const oscillator = beepAudioContext.createOscillator();
-            oscillator.type = 'square';
-            oscillator.frequency.setValueAtTime(440, beepAudioContext.currentTime); // Frequency 440 Hz (A4)
-            oscillator.connect(beepAudioContext.destination);
-            oscillator.start();
-            oscillator.stop(beepAudioContext.currentTime + 0.5);
+        const triggerAlarm = () => {
+            setAlarmActive(true);
+            setIsLoud(true);
+            playAlarmSound();
 
-            // Make alarm visible for 5 seconds
+            // Setze die Anzeige auf "isLoud" für 5 Sekunden
             if (alarmTimeoutRef.current) clearTimeout(alarmTimeoutRef.current);
             alarmTimeoutRef.current = setTimeout(() => setIsLoud(false), 5000);
         };
 
-        // Initialize audio on component mount
+        // Piepton programmatisch generieren
+        const playAlarmSound = () => {
+            const beepAudioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = beepAudioContext.createOscillator();
+            oscillator.type = 'square';
+            oscillator.frequency.setValueAtTime(440, beepAudioContext.currentTime);
+            oscillator.connect(beepAudioContext.destination);
+            oscillator.start();
+            oscillator.stop(beepAudioContext.currentTime + 0.5);
+        };
+
         initAudio();
 
-        // Cleanup function to stop audio when component unmounts
         return () => {
             if (audioContextRef.current) {
                 audioContextRef.current.close();
@@ -76,15 +79,7 @@ const VolumeMonitor = () => {
                 clearTimeout(alarmTimeoutRef.current);
             }
         };
-    }, [isLoud, threshold]);
-
-    // Update displayed volume with a delay for readability
-    useEffect(() => {
-        const timeout = setTimeout(() => {
-            setDisplayedVolume(currentVolume);
-        }, 500);
-        return () => clearTimeout(timeout);
-    }, [currentVolume]);
+    }, [alarmActive, threshold]);
 
     const handleThresholdChange = (event) => {
         setThreshold(Number(event.target.value));
