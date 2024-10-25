@@ -3,7 +3,7 @@ import './VolumeMonitor.css'; // Import the CSS file
 
 const VolumeMonitor = () => {
     const [isLoud, setIsLoud] = useState(false);
-    const [threshold, setThreshold] = useState(60); // Default threshold is 60 dB
+    const [threshold, setThreshold] = useState(25); // Default threshold is 60 dB
     const [currentVolume, setCurrentVolume] = useState(0); // Display current volume
     const audioContextRef = useRef(null);
     const analyserRef = useRef(null);
