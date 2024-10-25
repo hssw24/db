@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './VolumeMonitor.css'; // Importiere die CSS-Datei
+import './VolumeMonitor.css'; // Import the CSS file
 
 const VolumeMonitor = () => {
     const [isLoud, setIsLoud] = useState(false);
@@ -82,7 +82,7 @@ const VolumeMonitor = () => {
             <p>{isLoud ? "Lautstärke überschritten!" : "Lautstärke im normalen Bereich"}</p>
 
             <h3>Wählen Sie den Grenzwert:</h3>
-            {[40, 45, 50, 55, 60, 65, 70].map((value) => (
+            {[20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70].map((value) => (
                 <label key={value} style={{ marginRight: '10px' }}>
                     <input
                         type="radio"
