@@ -35,9 +35,9 @@ const VolumeMonitor = () => {
             const decibelsX = decibels;
             const decibels = 20 * Math.log10(avgVolume + 1); // Dezibelberechnung
             setDisplayedVolume((prev) => (prev * 0.8 + decibels * 0.2).toFixed(2)); // Glättung der Anzeige
-alert ausgabe;
-            ausgabe = ausgabe + " Zusatz - "  ;
-alert ausgabe;
+//alert ausgabe;
+  //          ausgabe = ausgabe + " Zusatz - "  ;
+//alert ausgabe;
             // Wenn Lautstärke höher als Grenzwert und Alarm noch nicht aktiv, Alarm auslösen
             if (decibels > threshold && !alarmActive) {
                 triggerAlarm();
@@ -86,7 +86,7 @@ alert ausgabe;
             <h1>Volume Monitor 3 mit gpt</h1>
             <p>Aktuelle Lautstärke: {displayedVolume} dB</p>
             <p>{isLoud ? "Lautstärke überschritten!" : "Lautstärke im normalen Bereich"}</p>
-<p>Auagabe: {ausgabe} - </p>
+<p>Ausgabe: {ausgabe} - </p>
 
             {isLoud && (
                 <div className="alarm-text">
