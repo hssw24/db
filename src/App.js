@@ -39,7 +39,7 @@ const VolumeMonitor = () => {
             setCurrentVolume(decibels.toFixed(2));
 
             // Glättung der Lautstärkeanzeige zur besseren Lesbarkeit
-            setDisplayedVolume((prev) => (prev * 0.8 + decibels * 0.2).toFixed(2));
+            setDisplayedVolume((prev) => (prev * 0.8 + decibels * 0.2).toFixed(0));
 
             // Grenzwertüberprüfung nur bei Überschreitung und wenn Alarm nicht bereits aktiv
             if (decibels > threshold && !alarmActive) {
