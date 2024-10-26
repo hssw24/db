@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import './VolumeMonitor.css';
 
 const VolumeMonitor = () => {
-const db = 0;
+let db = 0;
     const [isLoud, setIsLoud] = useState(false);
     const [threshold, setThreshold] = useState(50); // Standardgrenzwert auf 25 dB
     const [displayedVolume, setDisplayedVolume] = useState(0);
