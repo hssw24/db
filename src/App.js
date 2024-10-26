@@ -4,7 +4,7 @@ import './VolumeMonitor.css';
 const VolumeMonitor = () => {
     const piepDauer = 1.0; // Piepdauer
     const alarmDauer = 5000; // Alarmdauer
-    const stGrenze =25; // Standardgenzwert für Alarmauslösung
+    const stGrenze = 25; // Standardgenzwert für Alarmauslösung
 
     const [isLoud, setIsLoud] = useState(false);
     const [threshold, setThreshold] = useState(stGrenze); // Standardgrenzwert auf 25 dB
@@ -99,12 +99,12 @@ const VolumeMonitor = () => {
             <h1>Lalalulu Monitor</h1>
             <p>Aktuelle Lautstärke: {displayedVolume} dB - Aktuelle Grenze: {threshold} dB (P: {piepDauer} S) (A: {alarmDauer} mSek)</p>
             <p>{isLoud ? "Lautstärke überschritten!" : "Lautstärke im normalen Bereich"}</p>
-<p>setAlarmActive {alarmActive} - setIsLoud {isLoud}
+<p>alarmActive: {alarmActive} - {displayedVolume} isLoud: {isLoud}
 
     </p>
             {isLoud && (
                 <div className="alarm-text">
-                    Alarm
+                    Alarmy
                 </div>
             )}
 
