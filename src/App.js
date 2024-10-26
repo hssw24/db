@@ -82,7 +82,7 @@ const VolumeMonitor = () => {
     return (
         <div className={`volume-monitor ${isLoud ? 'alert' : ''}`}>
             <h1>Volume Monitor mit Variablenproblem?</h1>
-            <p>Aktuelle Lautstärke: {displayedVolume} dB {decibels}</p>
+            <p>Aktuelle Lautstärke: {displayedVolume} dB Warum kann ich hier Konstante ${decibels} nicht ausgeben?</p>
             <p>{isLoud ? "Lautstärke überschritten!" : "Lautstärke im normalen Bereich"}</p>
 
             {isLoud && (
