@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import './VolumeMonitor.css';
 
 const VolumeMonitor = () => {
-    let ausgabe = "Leerx +++ ";
     const [isLoud, setIsLoud] = useState(false);
     const [threshold, setThreshold] = useState(50); // Standardgrenzwert auf 25 dB
     const [displayedVolume, setDisplayedVolume] = useState(0);
@@ -35,11 +34,10 @@ const VolumeMonitor = () => {
 
             const decibels = 20 * Math.log10(avgVolume + 1); // Dezibelberechnung
             setDisplayedVolume((prev) => (prev * 0.8 + decibels * 0.2).toFixed(2)); // Glättung der Anzeige
-//alert(avgVolume);
-//  ausgabe = ausgabe + {decibels};          
             // Wenn Lautstärke höher als Grenzwert und Alarm noch nicht aktiv, Alarm auslösen
-            if (40 > threshold && !alarmActive) {
-//alert(decibels);
+
+// NICK: Hier muss der Fehler liegen. Ton und Meldung lösen IMMER aus!
+            if (decibels > threshold && !alarmActive) {
                 triggerAlarm();
             }
 
