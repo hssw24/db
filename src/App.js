@@ -47,7 +47,7 @@ const VolumeMonitor = () => {
 
             // Grenzwertüberprüfung nur bei Überschreitung und wenn Alarm nicht bereits aktiv
             // && !alarmActive
-            if (decibels > threshold ) {
+            if (decibels > threshold && !alarmActive) {
                 triggerAlarm();
             }
 
@@ -99,7 +99,9 @@ const VolumeMonitor = () => {
             <h1>Lalalulu Monitor</h1>
             <p>Aktuelle Lautstärke: {displayedVolume} dB - Aktuelle Grenze: {threshold} dB (P: {piepDauer} S) (A: {alarmDauer} mSek)</p>
             <p>{isLoud ? "Lautstärke überschritten!" : "Lautstärke im normalen Bereich"}</p>
+<p>setAlarmActive {setAlarmActive} - setIsLoud {setIsLoud}
 
+    </p>
             {isLoud && (
                 <div className="alarm-text">
                     Alarm
