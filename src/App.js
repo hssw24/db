@@ -2,8 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import './VolumeMonitor.css';
 
 const VolumeMonitor = () => {
+    const piepDauer = 1.0; // Piepdauer
+    const alarmDauer = 5000; // Alarmdauer
+    const stGrenze =25; // Standardgenzwert für Alarmauslösung
+
     const [isLoud, setIsLoud] = useState(false);
-    const [threshold, setThreshold] = useState(25); // Standardgrenzwert auf 25 dB
+    const [threshold, setThreshold] = useState(stGrenze); // Standardgrenzwert auf 25 dB
     const [currentVolume, setCurrentVolume] = useState(0); // Gemessene Lautstärke
     const [displayedVolume, setDisplayedVolume] = useState(0); // Glatte Anzeige-Lautstärke
     const [alarmActive, setAlarmActive] = useState(false);
@@ -12,8 +16,6 @@ const VolumeMonitor = () => {
     const microphoneRef = useRef(null);
     const dataArrayRef = useRef(null);
     const alarmTimeoutRef = useRef(null);
-    const piepDauer = 1.0;
-    const alarmDauer = 5000;
 
     useEffect(() => {
         async function initAudio() {
@@ -94,7 +96,7 @@ const VolumeMonitor = () => {
     return (
         <div className={`volume-monitor ${isLoud ? 'alert' : ''}`}>
             <h1>Lalalulu Monitor</h1>
-            <p>Aktuelle Lautstärke: {displayedVolume} dB - Aktuelle Grenze: {threshold} dB</p>
+            <p>Aktuelle Lautstärke: {displayedVolume} dB - Aktuelle Grenze: {threshold} dB (P: {piepDauer} S) (A: {alarmDauer} mSek)</p>
             <p>{isLoud ? "Lautstärke überschritten!" : "Lautstärke im normalen Bereich"}</p>
 
             {isLoud && (
