@@ -4,9 +4,8 @@ import './VolumeMonitor.css';
 const VolumeMonitor = () => {
     const [isLoud, setIsLoud] = useState(false);
     const [threshold, setThreshold] = useState(25); // Standardgrenzwert auf 25 dB
-    const [currentVolume, setCurrentVolume] = useState(0); // Gemessene Lautstärke
-    const [displayedVolume, setDisplayedVolume] = useState(0); // Glatte Anzeige-Lautstärke
-    const [alarmActive, setAlarmActive] = useState(false); // Alarmstatus
+    const [displayedVolume, setDisplayedVolume] = useState(0); // Gleitende Anzeige der Lautstärke
+    const [alarmActive, setAlarmActive] = useState(false); // Zustand des Alarms
     const audioContextRef = useRef(null);
     const analyserRef = useRef(null);
     const microphoneRef = useRef(null);
@@ -14,6 +13,7 @@ const VolumeMonitor = () => {
     const alarmTimeoutRef = useRef(null);
 
     useEffect(() => {
+        // Initialisierung der Audioüberwachung
         async function initAudio() {
             audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -23,25 +23,18 @@ const VolumeMonitor = () => {
 
             const bufferLength = analyserRef.current.frequencyBinCount;
             dataArrayRef.current = new Uint8Array(bufferLength);
-            
             microphoneRef.current.connect(analyserRef.current);
-
-            // Start monitoring volume
             monitorVolume();
         }
 
+        // Überwachung und Aktualisierung der Lautstärke
         const monitorVolume = () => {
             analyserRef.current.getByteFrequencyData(dataArrayRef.current);
             const avgVolume = dataArrayRef.current.reduce((a, b) => a + b) / dataArrayRef.current.length;
-
-            // Umrechnung in Dezibel (logarithmisch, vereinfacht)
-            const decibels = 20 * Math.log10(avgVolume + 1); // +1 um log10(0) zu vermeiden
-            setCurrentVolume(decibels.toFixed(2));
-
-            // Glättung der Lautstärkeanzeige zur besseren Lesbarkeit
+            const decibels = 20 * Math.log10(avgVolume + 1); // Umrechnung in dB
             setDisplayedVolume((prev) => (prev * 0.8 + decibels * 0.2).toFixed(2));
 
-            // Prüfen, ob der Grenzwert überschritten wird und der Alarm nicht aktiv ist
+            // Bedingung für Alarm: wenn Lautstärke über dem Grenzwert und Alarm noch nicht aktiv
             if (decibels > threshold && !alarmActive) {
                 triggerAlarm();
             }
@@ -49,20 +42,21 @@ const VolumeMonitor = () => {
             requestAnimationFrame(monitorVolume);
         };
 
+        // Alarm auslösen
         const triggerAlarm = () => {
             setAlarmActive(true);
             setIsLoud(true);
             playAlarmSound();
 
-            // Setze die Anzeige auf "isLoud" für 5 Sekunden und deaktiviere dann
+            // Setzt den Alarmstatus nach 5 Sekunden zurück
             if (alarmTimeoutRef.current) clearTimeout(alarmTimeoutRef.current);
             alarmTimeoutRef.current = setTimeout(() => {
                 setIsLoud(false);
-                setAlarmActive(false); // Setze den Alarmstatus zurück
+                setAlarmActive(false);
             }, 5000);
         };
 
-        // Piepton programmatisch generieren
+        // Piepton für Alarm
         const playAlarmSound = () => {
             const beepAudioContext = new (window.AudioContext || window.webkitAudioContext)();
             const oscillator = beepAudioContext.createOscillator();
@@ -76,22 +70,16 @@ const VolumeMonitor = () => {
         initAudio();
 
         return () => {
-            if (audioContextRef.current) {
-                audioContextRef.current.close();
-            }
-            if (alarmTimeoutRef.current) {
-                clearTimeout(alarmTimeoutRef.current);
-            }
+            if (audioContextRef.current) audioContextRef.current.close();
+            if (alarmTimeoutRef.current) clearTimeout(alarmTimeoutRef.current);
         };
-    }, [alarmActive, threshold]);
+    }, [threshold]);
 
-    const handleThresholdChange = (event) => {
-        setThreshold(Number(event.target.value));
-    };
+    const handleThresholdChange = (event) => setThreshold(Number(event.target.value));
 
     return (
         <div className={`volume-monitor ${isLoud ? 'alert' : ''}`}>
-            <h1>Volume Monitor</h1>
+            <h1>Volume Monitor neu 2</h1>
             <p>Aktuelle Lautstärke: {displayedVolume} dB</p>
             <p>{isLoud ? "Lautstärke überschritten!" : "Lautstärke im normalen Bereich"}</p>
 
