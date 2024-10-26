@@ -32,7 +32,7 @@ const VolumeMonitor = () => {
         const monitorVolume = () => {
             analyserRef.current.getByteFrequencyData(dataArrayRef.current);
             const avgVolume = dataArrayRef.current.reduce((a, b) => a + b) / dataArrayRef.current.length;
-            const decibelsX = decibels;
+
             const decibels = 20 * Math.log10(avgVolume + 1); // Dezibelberechnung
             setDisplayedVolume((prev) => (prev * 0.8 + decibels * 0.2).toFixed(2)); // Glättung der Anzeige
 alert(decibels);
