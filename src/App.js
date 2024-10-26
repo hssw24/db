@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import './VolumeMonitor.css';
 
 const VolumeMonitor = () => {
-    const ausgabe = "Leer";
+    var ausgabe = "Leer";
     const [isLoud, setIsLoud] = useState(false);
     const [threshold, setThreshold] = useState(25); // Standardgrenzwert auf 25 dB
     const [displayedVolume, setDisplayedVolume] = useState(0);
@@ -36,7 +36,7 @@ const VolumeMonitor = () => {
             const decibels = 20 * Math.log10(avgVolume + 1); // Dezibelberechnung
             setDisplayedVolume((prev) => (prev * 0.8 + decibels * 0.2).toFixed(2)); // Glättung der Anzeige
 
-            ausgabe = ausgabe & "Zusatz"  ;
+            ausgabe = ausgabe + "Zusatz"  ;
             // Wenn Lautstärke höher als Grenzwert und Alarm noch nicht aktiv, Alarm auslösen
             if (decibelsX > threshold && !alarmActive) {
                 triggerAlarm();
