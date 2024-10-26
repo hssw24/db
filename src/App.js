@@ -12,6 +12,8 @@ const VolumeMonitor = () => {
     const microphoneRef = useRef(null);
     const dataArrayRef = useRef(null);
     const alarmTimeoutRef = useRef(null);
+    const piepDauer = 1.0;
+    const alarmDauer = 5000;
 
     useEffect(() => {
         async function initAudio() {
@@ -59,7 +61,7 @@ const VolumeMonitor = () => {
             alarmTimeoutRef.current = setTimeout(() => {
                 setIsLoud(false);
                 setAlarmActive(false);
-            }, 2000);
+            }, alarmDauer); //alarmDauer statt 5000
         };
 
         // Piepton programmatisch generieren
@@ -70,7 +72,7 @@ const VolumeMonitor = () => {
             oscillator.frequency.setValueAtTime(440, beepAudioContext.currentTime);
             oscillator.connect(beepAudioContext.destination);
             oscillator.start();
-            oscillator.stop(beepAudioContext.currentTime + 1.5);
+            oscillator.stop(beepAudioContext.currentTime + piepDauer); //piepDauer statt 0.5
         };
 
         initAudio();
