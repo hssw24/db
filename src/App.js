@@ -35,9 +35,9 @@ const VolumeMonitor = () => {
             setDisplayedVolume((prev) => (prev * 0.8 + decibels * 0.2).toFixed(2)); // Glättung der Anzeige
 
             // Wenn Lautstärke höher als Grenzwert und Alarm noch nicht aktiv, Alarm auslösen
-            if (decibels > threshold && !alarmActive) {
-                triggerAlarm();
-            }
+//            if (decibels > threshold && !alarmActive) {
+//                triggerAlarm();
+//            }
 
             requestAnimationFrame(monitorVolume);
         };
