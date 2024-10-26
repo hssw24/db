@@ -33,9 +33,8 @@ const VolumeMonitor = () => {
             const avgVolume = dataArrayRef.current.reduce((a, b) => a + b) / dataArrayRef.current.length;
 
             const decibels = 20 * Math.log10(avgVolume + 1); // Dezibelberechnung
-//            setDisplayedVolume((prev) => (prev * 0.8 + decibels * 0.2).toFixed(2)); // Glättung der Anzeige
-
-            
+            setDisplayedVolume((prev) => (prev * 0.8 + decibels * 0.2).toFixed(2)); // Glättung der Anzeige
+          
             // Wenn Lautstärke höher als Grenzwert und Alarm noch nicht aktiv, Alarm auslösen
 // NICK: Hier muss der Fehler liegen. Ton und Meldung lösen IMMER aus!
             if (decibels > threshold && !alarmActive) {
@@ -83,7 +82,7 @@ const VolumeMonitor = () => {
     return (
         <div className={`volume-monitor ${isLoud ? 'alert' : ''}`}>
             <h1>Volume Monitor mit Variablenproblem?</h1>
-            <p>Aktuelle Lautstärke: {displayedVolume} dB </p>
+            <p>Aktuelle Lautstärke: {displayedVolume} dB {decibels}</p>
             <p>{isLoud ? "Lautstärke überschritten!" : "Lautstärke im normalen Bereich"}</p>
 
             {isLoud && (
