@@ -91,7 +91,7 @@ const VolumeMonitor = () => {
 
     return (
         <div className={`volume-monitor ${isLoud ? 'alert' : ''}`}>
-            <h1>Volume Monitor</h1>
+            <h1>Lala Monitor</h1>
             <p>Aktuelle Lautstärke: {displayedVolume} dB</p>
             <p>{isLoud ? "Lautstärke überschritten!" : "Lautstärke im normalen Bereich"}</p>
 
