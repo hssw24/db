@@ -37,7 +37,7 @@ const db = 0;
             setDisplayedVolume((prev) => (prev * 0.8 + decibels * 0.2).toFixed(2)); // Glättung der Anzeige
             // Wenn Lautstärke höher als Grenzwert und Alarm noch nicht aktiv, Alarm auslösen
 
-db = decibels;
+db = 25;
 // NICK: Hier muss der Fehler liegen. Ton und Meldung lösen IMMER aus!
             if (decibels > threshold && !alarmActive) {
                 triggerAlarm();
