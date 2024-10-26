@@ -36,6 +36,8 @@ const VolumeMonitor = () => {
 
             // Bedingung für Alarm: wenn Lautstärke über dem Grenzwert und Alarm noch nicht aktiv
             if (decibels > threshold && !alarmActive) {
+                decibels2=decibels;
+                <p>Dezibel: {decibels2} dB</p>
                 triggerAlarm();
             }
 
