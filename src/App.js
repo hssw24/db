@@ -59,7 +59,7 @@ const VolumeMonitor = () => {
             alarmTimeoutRef.current = setTimeout(() => {
                 setIsLoud(false);
                 setAlarmActive(false);
-            }, 5000);
+            }, 2000);
         };
 
         // Piepton programmatisch generieren
@@ -70,7 +70,7 @@ const VolumeMonitor = () => {
             oscillator.frequency.setValueAtTime(440, beepAudioContext.currentTime);
             oscillator.connect(beepAudioContext.destination);
             oscillator.start();
-            oscillator.stop(beepAudioContext.currentTime + 0.5);
+            oscillator.stop(beepAudioContext.currentTime + 1.5);
         };
 
         initAudio();
