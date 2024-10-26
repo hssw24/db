@@ -46,7 +46,8 @@ const VolumeMonitor = () => {
             setDisplayedVolume((prev) => (prev * 0.8 + decibels * 0.2).toFixed(0)); //toFixed=Nachkommastellen
 
             // Grenzwertüberprüfung nur bei Überschreitung und wenn Alarm nicht bereits aktiv
-            if (decibels > threshold && !alarmActive) {
+            // && !alarmActive
+            if (decibels > threshold ) {
                 triggerAlarm();
             }
 
