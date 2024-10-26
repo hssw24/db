@@ -38,7 +38,7 @@ const VolumeMonitor = () => {
 //alert(avgVolume);
 //  ausgabe = ausgabe + {decibels};          
             // Wenn Lautstärke höher als Grenzwert und Alarm noch nicht aktiv, Alarm auslösen
-            if (avgVolume > threshold && !alarmActive) {
+            if (40 > threshold && !alarmActive) {
 //alert(decibels);
                 triggerAlarm();
             }
