@@ -2,15 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import './VolumeMonitor.css';
 
 const VolumeMonitor = () => {
-    const piepDauer = 1.0; // Piepdauer
-    const alarmDauer = 5000; // Alarmdauer
-    const stGrenze = 25; // Standardgenzwert für Alarmauslösung
-
     const [isLoud, setIsLoud] = useState(false);
-    const [threshold, setThreshold] = useState(stGrenze); // Standardgrenzwert auf 25 dB
+    const [threshold, setThreshold] = useState(25); // Standardgrenzwert auf 25 dB
     const [currentVolume, setCurrentVolume] = useState(0); // Gemessene Lautstärke
     const [displayedVolume, setDisplayedVolume] = useState(0); // Glatte Anzeige-Lautstärke
-    const [alarmActive, setAlarmActive] = useState(false);
+    const [alarmActive, setAlarmActive] = useState(false); // Alarmstatus
     const audioContextRef = useRef(null);
     const analyserRef = useRef(null);
     const microphoneRef = useRef(null);
@@ -43,10 +39,9 @@ const VolumeMonitor = () => {
             setCurrentVolume(decibels.toFixed(2));
 
             // Glättung der Lautstärkeanzeige zur besseren Lesbarkeit
-            setDisplayedVolume((prev) => (prev * 0.8 + decibels * 0.2).toFixed(0)); //toFixed=Nachkommastellen
+            setDisplayedVolume((prev) => (prev * 0.8 + decibels * 0.2).toFixed(2));
 
-            // Grenzwertüberprüfung nur bei Überschreitung und wenn Alarm nicht bereits aktiv
-            // && !alarmActive
+            // Prüfen, ob der Grenzwert überschritten wird und der Alarm nicht aktiv ist
             if (decibels > threshold && !alarmActive) {
                 triggerAlarm();
             }
@@ -63,8 +58,8 @@ const VolumeMonitor = () => {
             if (alarmTimeoutRef.current) clearTimeout(alarmTimeoutRef.current);
             alarmTimeoutRef.current = setTimeout(() => {
                 setIsLoud(false);
-                setAlarmActive(false);
-            }, alarmDauer); //alarmDauer statt 5000
+                setAlarmActive(false); // Setze den Alarmstatus zurück
+            }, 5000);
         };
 
         // Piepton programmatisch generieren
@@ -75,7 +70,7 @@ const VolumeMonitor = () => {
             oscillator.frequency.setValueAtTime(440, beepAudioContext.currentTime);
             oscillator.connect(beepAudioContext.destination);
             oscillator.start();
-            oscillator.stop(beepAudioContext.currentTime + piepDauer); //piepDauer statt 0.5
+            oscillator.stop(beepAudioContext.currentTime + 0.5);
         };
 
         initAudio();
@@ -96,15 +91,13 @@ const VolumeMonitor = () => {
 
     return (
         <div className={`volume-monitor ${isLoud ? 'alert' : ''}`}>
-            <h1>Lalalulu Monitor</h1>
-            <p>Aktuelle Lautstärke: {displayedVolume} dB - Aktuelle Grenze: {threshold} dB (P: {piepDauer} S) (A: {alarmDauer} mSek)</p>
+            <h1>Volume Monitor</h1>
+            <p>Aktuelle Lautstärke: {displayedVolume} dB</p>
             <p>{isLoud ? "Lautstärke überschritten!" : "Lautstärke im normalen Bereich"}</p>
-<p>alarmActive: {alarmActive} - {displayedVolume} isLoud: {isLoud}
 
-    </p>
             {isLoud && (
                 <div className="alarm-text">
-                    Alarmy
+                    Alarm
                 </div>
             )}
 
