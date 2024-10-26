@@ -39,7 +39,7 @@ const VolumeMonitor = () => {
             setCurrentVolume(decibels.toFixed(2));
 
             // Glättung der Lautstärkeanzeige zur besseren Lesbarkeit
-            setDisplayedVolume((prev) => (prev * 0.8 + decibels * 0.2).toFixed(0));
+            setDisplayedVolume((prev) => (prev * 0.8 + decibels * 0.2).toFixed(0)); //toFixed=Nachkommastellen
 
             // Grenzwertüberprüfung nur bei Überschreitung und wenn Alarm nicht bereits aktiv
             if (decibels > threshold && !alarmActive) {
@@ -91,7 +91,7 @@ const VolumeMonitor = () => {
 
     return (
         <div className={`volume-monitor ${isLoud ? 'alert' : ''}`}>
-            <h1>Lala Monitor</h1>
+            <h1>Lalalulu Monitor</h1>
             <p>Aktuelle Lautstärke: {displayedVolume} dB</p>
             <p>{isLoud ? "Lautstärke überschritten!" : "Lautstärke im normalen Bereich"}</p>
 
