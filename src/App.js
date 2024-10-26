@@ -4,8 +4,8 @@ import './VolumeMonitor.css';
 const VolumeMonitor = () => {
     const [isLoud, setIsLoud] = useState(false);
     const [threshold, setThreshold] = useState(25); // Standardgrenzwert auf 25 dB
-    const [displayedVolume, setDisplayedVolume] = useState(0); // Gleitende Anzeige der Lautstärke
-    const [alarmActive, setAlarmActive] = useState(false); // Zustand des Alarms
+    const [displayedVolume, setDisplayedVolume] = useState(0);
+    const [alarmActive, setAlarmActive] = useState(false); // Alarmzustand
     const audioContextRef = useRef(null);
     const analyserRef = useRef(null);
     const microphoneRef = useRef(null);
@@ -27,14 +27,14 @@ const VolumeMonitor = () => {
             monitorVolume();
         }
 
-        // Überwachung und Aktualisierung der Lautstärke
+        // Lautstärkeüberwachung
         const monitorVolume = () => {
             analyserRef.current.getByteFrequencyData(dataArrayRef.current);
             const avgVolume = dataArrayRef.current.reduce((a, b) => a + b) / dataArrayRef.current.length;
-            const decibels = 20 * Math.log10(avgVolume + 1); // Umrechnung in dB
-            setDisplayedVolume((prev) => (prev * 0.8 + decibels * 0.2).toFixed(2));
+            const decibels = 20 * Math.log10(avgVolume + 1); // Dezibelberechnung
+            setDisplayedVolume((prev) => (prev * 0.8 + decibels * 0.2).toFixed(2)); // Glättung der Anzeige
 
-            // Bedingung für Alarm: wenn Lautstärke über dem Grenzwert und Alarm noch nicht aktiv
+            // Wenn Lautstärke höher als Grenzwert und Alarm noch nicht aktiv, Alarm auslösen
             if (decibels > threshold && !alarmActive) {
                 triggerAlarm();
             }
@@ -79,7 +79,7 @@ const VolumeMonitor = () => {
 
     return (
         <div className={`volume-monitor ${isLoud ? 'alert' : ''}`}>
-            <h1>Volume Monitor neu 2</h1>
+            <h1>Volume Monitor 3 mit gpt</h1>
             <p>Aktuelle Lautstärke: {displayedVolume} dB</p>
             <p>{isLoud ? "Lautstärke überschritten!" : "Lautstärke im normalen Bereich"}</p>
 
