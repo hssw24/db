@@ -4,7 +4,7 @@ import './VolumeMonitor.css';
 const VolumeMonitor = () => {
     let ausgabe = "Leerx +++ ";
     const [isLoud, setIsLoud] = useState(false);
-    const [threshold, setThreshold] = useState(25); // Standardgrenzwert auf 25 dB
+    const [threshold, setThreshold] = useState(50); // Standardgrenzwert auf 25 dB
     const [displayedVolume, setDisplayedVolume] = useState(0);
     const [alarmActive, setAlarmActive] = useState(false); // Alarmzustand
     const audioContextRef = useRef(null);
