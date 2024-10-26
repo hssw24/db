@@ -84,7 +84,6 @@ const VolumeMonitor = () => {
             <h1>Volume Monitor 3 mit gpt</h1>
             <p>Aktuelle Lautstärke: {displayedVolume} dB</p>
             <p>{isLoud ? "Lautstärke überschritten!" : "Lautstärke im normalen Bereich"}</p>
-<p>Ausgabe: {ausgabe} - </p>
 
             {isLoud && (
                 <div className="alarm-text">
