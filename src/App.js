@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import './VolumeMonitor.css';
 
 const VolumeMonitor = () => {
+    const ausgabe = "Leer";
     const [isLoud, setIsLoud] = useState(false);
     const [threshold, setThreshold] = useState(25); // Standardgrenzwert auf 25 dB
     const [displayedVolume, setDisplayedVolume] = useState(0);
@@ -83,6 +84,7 @@ const VolumeMonitor = () => {
             <h1>Volume Monitor 3 mit gpt</h1>
             <p>Aktuelle Lautstärke: {displayedVolume} dB</p>
             <p>{isLoud ? "Lautstärke überschritten!" : "Lautstärke im normalen Bereich"}</p>
+<p>Auagabe: {ausgabe} - </p>
 
             {isLoud && (
                 <div className="alarm-text">
